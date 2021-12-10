@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Client</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style type="text/css">
+        #main-panel .tab-content {
+            margin-top: 10px;
+            height: 400px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <header class="jumbotron">
+        <div class="container">
+            <h2>Websocket Chat</h2>
+        </div>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-9">
+                <div id="main-panel" class="panel panel-default">
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+                            <li role="presentation"><a href="#statuses" aria-controls="statuses" role="tab" data-toggle="tab">Statuses</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="messages" role="tabpanel"></div>
+                            <div class="tab-pane" id="statuses" role="tabpanel"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Users</h3>
+                    </div>
+                    <div id="users" class="panel-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <form action="javascript" onsubmit="return send_message(this)">
+            <input type="text" id="message_input" class="form-control" placeholder="Type a message...">
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://127.0.0.1:1299/");
+
+        messages = $("#messages");
+
+        ws.onmessage = event => print_message(event.data)
+
+        ws.onopen = event => {
+            console.log(event)
+            print_status(event.type)
+        };
+
+        ws.onclose = event => {
+            console.log(event)
+            print_status(event.type)
+        };
+
+        ws.onerror = event => {
+            console.log(event)
+            print_status(event.type)
+        };
+
+        function print_message(message)
+        {
+            messages.append("<p>" + message + "</p>")
+            messages.scrollTop(messages[0].scrollHeight)
+        }
+
+        function send_message(form)
+        {
+            ws.send(form.querySelector('#message_input').value);
+
+            return false;
+        }
+
+        function print_status(status)
+        {
+            document.getElementById("statuses").innerHTML += "<p>" + status + "</p>"
+        }
+    </script>
+</body>
+</html>
