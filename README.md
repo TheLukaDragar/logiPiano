@@ -22,3 +22,6 @@ var ws=new WebSocket("ws://127.0.0.1:1299/");function waitingKeypress(){return n
 ```
 
 start the song and the keys should light up :)
+
+https://user-images.githubusercontent.com/44731570/145671283-449427c5-c1d2-4ab2-8e50-d8bb0f8990e8.mp4
+
