@@ -52,7 +52,7 @@ class Server:
             message = await client.recv()
             #key = str(message)[0].upper()
 
-            led_color(0.5,0.2,0.1)
+            led_color(0.4,0.4,0.4)
             for key in message:
                 try:
 
